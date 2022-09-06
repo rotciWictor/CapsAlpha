@@ -55,7 +55,7 @@ document.getElementById('textBox').oninput = function (e) {
             clearTimeout(startFive);
 
             console.log('1000 -> ', deltaOps);
-            //ws.send(JSON.stringify({ ops: deltaOps }))
+            ws.send(JSON.stringify({ ops: deltaOps }))
 
             deltaOps = []
         }, 1000);
@@ -66,7 +66,7 @@ document.getElementById('textBox').oninput = function (e) {
             clearTimeout(startSecond);
 
             console.log('5000 -> ', deltaOps);
-            //ws.send(JSON.stringify({ ops: deltaOps }))
+            ws.send(JSON.stringify({ ops: deltaOps }))
 
             deltaOps = []
         }, 3000);
@@ -86,7 +86,7 @@ document.getElementById('textBox').oninput = function (e) {
                 clearTimeout(startFive);
 
                 console.log('1000 -> ', deltaOps);
-                //ws.send(JSON.stringify({ ops: deltaOps }))
+                ws.send(JSON.stringify({ ops: deltaOps }))
 
                 deltaOps = []
             }, 1000);
