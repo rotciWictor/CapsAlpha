@@ -56,7 +56,6 @@ app.use((err, req, res, next) => {
 app.use("/", indexRoute);
 app.use("/user", userRoute);
 
-
 ////////////////////////////////////////////////////////////////////////////////
 // WebSocket Server
 
@@ -88,7 +87,7 @@ wss.on('connection', (ws, req) => {
     try {
       const message = isBinary ? data : data.toString();
       //console.log(isBinary, message, typeof message)
-      console.log(wss)
+      // console.log(wss)
       wss.clients.forEach((client) => {
         if (client.readyState === WebSocket.OPEN && ws.userId !== client.userId) {
           client.send(message);
@@ -97,7 +96,6 @@ wss.on('connection', (ws, req) => {
     }
     catch (e) { console.log("WS-MESSAGE ERROR: message(fn) --> received non-parsable DATA --> " + e); return; }
   });
-
 
   //ws.on('message', (data, isBinary) => { })
 });

@@ -89,3 +89,26 @@ quill.on('text-change', (delta, oldDelta, source) => {
 //          }
 //      }
 //  };
+
+window.onload = (event) => {
+  fetch("/get-document")
+  .then((response) => response.json())
+  .then( data => {
+    console.log(data)
+    quill.updateContents(data)
+  })
+};
+
+document.getElementById('textBox').onkeydown = function (e) {
+  setTimeout( () => {
+    options = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(quill.getContents())
+    }
+  
+    fetch("/save", options)
+    .then((response) => response.json())
+    .then( res => console.log(res))
+  }, 500)
+}
