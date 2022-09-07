@@ -6,6 +6,7 @@ import Login from "../pages/Login";
 import Register from "../pages/Register";
 import MyProjects from "../pages/MyProjects";
 import Editor from "../pages/Editor";
+import Prototype from "../pages/Prototype";
 
 function Router() {
   return (
@@ -15,7 +16,7 @@ function Router() {
       <Route path="/Login" element={<Login />} />
       <Route path="/MyProjects" element={<MyProjects />} />
       <Route path="/Editor" element={<Editor />} />
-
+      <Route path="/Prototype" element={<Prototype />} />
     </Routes>
   );
 }
