@@ -100,6 +100,8 @@ window.onload = (event) => {
 };
 
 document.getElementById('textBox').onkeydown = function (e) {
+  document.getElementById('viewBox').innerHTML = marked.parse(document.getElementById('textBox').innerText);
+
   setTimeout( () => {
     options = {
       method: 'POST',
