@@ -3,10 +3,11 @@ var quill = new Quill('#textBox', {
         toolbar: false,
         'syntax': false
     },
+    formats: [],
     theme: 'bubble',
 });
 
-const ws = new WebSocket('ws://localhost:4000') || new WebSocket('ws://192.168.18.20:4000');
+const ws = new WebSocket('ws://localhost:4000');
 
 ws.onopen = function (e) {
     console.log('[open] Connection established')
@@ -37,10 +38,10 @@ let end = 0;
 let deltaOps = [];
 
 quill.on('text-change', (delta, oldDelta, source) => {
-  if (source == 'user') {
-    console.log(delta)
-    ws.send(JSON.stringify(delta))
-  }
+    if (source == 'user') {
+        console.log(delta)
+        ws.send(JSON.stringify(delta))
+    }
 });
 
 //  document.getElementById('textBox').onkeydown = function (e) {
@@ -52,7 +53,7 @@ quill.on('text-change', (delta, oldDelta, source) => {
 //             if (source == 'user') {
 //                 console.log(delta)
 //                 ws.send(JSON.stringify(delta))
-//               } 
+//               }
 //          });
 //          startSecond = setTimeout(() => {
 //              start = 0;
