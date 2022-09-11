@@ -1,5 +1,8 @@
+Quill.register('modules/cursors', QuillCursors);
+
 var quill = new Quill('#textBox', {
     modules: {
+        cursors: true,
         toolbar: false,
         'syntax': false
     },
@@ -7,15 +10,20 @@ var quill = new Quill('#textBox', {
 });
 
 const ws = new WebSocket('ws://localhost:4000') || new WebSocket('ws://192.168.18.20:4000');
+const wsCursors = new WebSocket('ws://localhost:4000') || new WebSocket('ws://192.168.18.20:4000');
 
 ws.onopen = function (e) {
     console.log('[open] Connection established')
 };
 
 ws.onmessage = function (event) {
-    const message = JSON.parse(event.data);
+    const changes = JSON.parse(event.data);
+    const message = changes.ops
+    const cursor = changes.cursor
     console.log(`[message] Data received from server:`, message);
     quill.updateContents(message);
+
+    quillCursors.moveCursor('cursor', cursor)
 };
 
 ws.onclose = function (event) {
@@ -39,9 +47,15 @@ let deltaOps = [];
 quill.on('text-change', (delta, oldDelta, source) => {
   if (source == 'user') {
     console.log(delta)
-    ws.send(JSON.stringify(delta))
+    ws.send(JSON.stringify({ops: delta, cursor: 1}))
   }
 });
+
+quill.on('selection-change', function(range, oldRange, source) {
+  if (range) {
+    ws.send(JSON.stringify({ops: {}, cursor: range}))
+  }
+})
 
 //  document.getElementById('textBox').onkeydown = function (e) {
 //      document.getElementById('viewBox').innerHTML = marked.parse(document.getElementById('textBox').innerText);
@@ -90,27 +104,30 @@ quill.on('text-change', (delta, oldDelta, source) => {
 //      }
 //  };
 
-window.onload = (event) => {
-  fetch("/get-document")
-  .then((response) => response.json())
-  .then( data => {
-    console.log(data)
-    quill.updateContents(data)
-  })
-};
+// window.onload = (event) => {
+//   fetch("/get-document")
+//   .then((response) => response.json())
+//   .then( data => {
+//     console.log(data)
+//     quill.updateContents(data)
+//   })
+// };
+
+quillCursors = quill.getModule('cursors');
+
+quillCursors.createCursor('cursor', 'User 2', 'blue')
 
 document.getElementById('textBox').onkeydown = function (e) {
   document.getElementById('viewBox').innerHTML = marked.parse(document.getElementById('textBox').innerText);
 
-  setTimeout( () => {
     options = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(quill.getContents())
     }
-  
-    fetch("/save", options)
-    .then((response) => response.json())
-    .then( res => console.log(res))
-  }, 500)
+
+    quillCursors.moveCursor('cursor')
+  //   fetch("/save", options)
+  //   .then((response) => response.json())
+  //   .then( res => console.log(res))
 }
